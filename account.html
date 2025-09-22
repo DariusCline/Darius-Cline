@@ -1,0 +1,56 @@
+{% extends "base.html" %}  
+{% block title %}Account{% endblock %}  
+
+{% block content %}   
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <h2 class="text-center mb-4 text-primary">Your Account</h2>
+        
+        <!-- User Profile Card -->
+        <div class="message-card my-3 p-4">
+            <div class="d-flex align-items-center mb-4">
+                <div class="avatar-container flex-shrink-0 me-4">
+                    <img src="{{ url_for('static', filename='profile_pics/' + profile_pic) }}" alt="Profile Picture" class="rounded-circle avatar-img">
+                </div>
+                <div class="flex-grow-1">
+                    <h4 class="message-username">{{ username }}</h4>
+                </div>
+            </div>
+            
+            <!-- Profile Picture Upload Form -->
+            <form action="{{ url_for('account') }}" method="post" enctype="multipart/form-data" class="mt-4">
+                <div class="form-group mb-3">
+                    <label for="profile_pic_upload" class="form-label text-primary d-block text-left">Change Profile Picture</label>
+                    <input type="file" class="form-control" id="profile_pic_upload" name="file" accept=".png, .jpg, .jpeg, .gif">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Upload Picture</button>
+            </form>
+        </div>
+        
+        <!-- "Make a Post" Redirect Button -->
+        <div class="my-3">
+            <a href="{{ url_for('website') }}" class="btn btn-primary w-100">Make a Post</a>
+        </div>
+
+        <!-- User Messages Section -->
+        <h3 class="text-center mt-5 mb-4 text-primary">Your Messages</h3>
+        {% for username, message_text, timestamp in messages %}  
+            {% if username == session['username'] %}
+                <div class="message-card my-3 p-4">
+                    <div class="message-content">
+                        <p class="message-text">{{ message_text }}</p>
+                        <h5 class="message-username text-left">
+                            {{ username }}
+                            <small class="text-muted">{{ timestamp }}</small>
+                        </h5>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                <p class="mb-0">No messages to display yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

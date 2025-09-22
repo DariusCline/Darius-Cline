@@ -1,0 +1,42 @@
+{% extends "base.html" %}  
+{% block title %}Website{% endblock %}  
+
+{% block content %}   
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <h2 class="text-center mb-4 text-primary">Messages</h2>
+        
+        <!-- Message Posting Form -->
+        {% if session.get('username') %}
+        <h3 class="text-center mt-5 mb-4 text-primary">Post a message</h3>
+        <form action="{{ url_for('website') }}" method="post" class="message-post-form">
+            <textarea name="message" class="form-control" rows="5" placeholder="What's on your mind?" required></textarea>
+            <button type="submit" class="btn btn-primary mt-3 w-100">Post</button>
+        </form>
+        {% endif %}
+
+        <!-- Message Feed -->
+        {% for username, message_text, timestamp in messages %}  
+            <div class="message-card my-3 p-4">
+                <div class="d-flex align-items-start">
+                    <div class="avatar-container flex-shrink-0 me-3">
+                        {% set profile_pic = profiles.get(username, 'default.png') %}
+                        <img src="{{ url_for('static', filename='profile_pics/' + profile_pic) }}" alt="User Avatar" class="rounded-circle avatar-img">
+                    </div>
+                    <div class="flex-grow-1">
+                        <h5 class="message-username text-left">
+                            {{ username }}
+                            <small class="text-muted">{{ timestamp }}</small>
+                        </h5>
+                        <p class="message-text">{{ message_text }}</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                <p class="mb-0">No messages to display yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
